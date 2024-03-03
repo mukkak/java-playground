@@ -1,0 +1,36 @@
+# See https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+name: Maven Build
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: ["v*"]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Maven Build
+        run: mvn --batch-mode --update-snapshots verify
+
+#      - name: Prepare Artifacts
+#        run: mkdir dist && cp target/*.jar dist
+#
+#      - name: Upload Build Artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: dist
+#          path: dist
